@@ -17,3 +17,4 @@
 #define ARG4 ARG(4)
 
 typedef struct player Player;
+typedef struct game_state Game;
