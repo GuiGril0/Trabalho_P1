@@ -165,8 +165,39 @@ void make_move(Player *attacker, Player *defender, char *play) {
     }
 }
 
+void save_move(Player *p1, Player *p2, Game *head) {
+    Game *temp = (Game*)malloc(sizeof(Game));
+    Game *aux = head;
+
+    temp->next = NULL;
+    temp->p1.left = p1->left;
+    temp->p1.right = p1->right;
+    temp->p2.left = p2->left;
+    temp->p2.right = p2->right;
+
+    while(aux->next != NULL)
+        aux = aux->next;
+    aux->next = temp;
+}
+
+int check_previous_moves(Player *p1, Player *p2, Game *head) {
+    Game *aux = head;
+
+    while(aux != NULL) {
+        if((aux->p1.left == p1->left && aux->p1.right == p1->right) && (aux->p2.left == p2->left && aux->p2.right == p2->right))
+            return 1;
+        aux = aux->next;
+    }
+    return 0;
+}
+
 void game(Player *p1, Player *p2) {
     v = getenv("EMPATE");
+    Game *head = NULL;
+    if(v != NULL) {
+        head = (Game*)malloc(sizeof(Game));
+        head->next = NULL;
+    }
     show_game_state(p1, p2);
     while((p1->left != 0 || p1->right != 0) && (p2->left != 0 || p2->right != 0)) {
         while(1) {
@@ -206,9 +237,12 @@ void game(Player *p1, Player *p2) {
             printf("vitória do %s!!!\n\n", p1->name);
             exit(1);
         }
-
         if(v != NULL) {
-
+            if(check_previous_moves(p1, p2, head)) {
+                printf("empate!\n\n");
+                exit(1);
+            }
+            save_move(p1, p2, head);
         }
 
         while(1) {
@@ -246,6 +280,13 @@ void game(Player *p1, Player *p2) {
         if(p1->left == 0 && p1->right == 0) {
             printf("vitória do %s!!!\n\n", p2->name);
             exit(1);
+        }
+        if(v != NULL) {
+            if(check_previous_moves(p1, p2, head)) {
+                printf("empate!\n\n");
+                exit(1);
+            }
+            save_move(p1, p2, head);
         }
     }
 }
