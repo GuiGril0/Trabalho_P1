@@ -50,7 +50,7 @@ char* define_computer_move(Player *attacker, Player *defender) {
         aux = play;
         return aux;
     }
-    else {
+    else if(strstr(attacker->name, "ao-calhas") != NULL) {
         char **possible_plays = (char**)malloc(5*sizeof(char*));
         for(int i=0; i<5; i++)
             possible_plays[i] = (char*)malloc(5*sizeof(char));
@@ -65,7 +65,13 @@ char* define_computer_move(Player *attacker, Player *defender) {
         int random = rand() % j;
         return possible_plays[random];
     }
-} 
+    else if(strstr(attacker->name, "meta-estratégia") != NULL) {
+        char all_strategies[2][20] = {"chico-esperto", "ao-calhas"};
+        int random = rand() % 2;
+        sprintf(attacker->name, all_strategies[random]);
+        return define_computer_move(attacker, defender);
+    }
+}
 
 void show_game_state(Player *p1, Player *p2) {
     printf("%s: %d, %d\n", p1->name, p1->left, p1->right);
@@ -199,7 +205,7 @@ void game(Player *p1, Player *p2) {
         head->next = NULL;
     }
     show_game_state(p1, p2);
-    while((p1->left != 0 || p1->right != 0) && (p2->left != 0 || p2->right != 0)) {
+    while(1) {
         while(1) {
             if(strstr(p1->name, "humano") != NULL) {
                 char *play = define_human_move(p1);
@@ -229,7 +235,24 @@ void game(Player *p1, Player *p2) {
                 show_game_state(p1, p2);
                 break;
             }
-            
+            else {
+                char name[20];
+                sprintf(name, p1->name);
+                char *play = define_computer_move(p1, p2);
+                if(strcmp(p1->name, "chico-esperto") == 0) {
+                    if(validate_move(p1, p2, play)) {
+                        printf("vez do %s: %s\n", name, play);
+                        make_move(p1, p2, play);
+                    }
+                }
+                else {
+                    printf("vez do %s: %s\n", name, play);
+                    make_move(p1, p2, play);
+                }
+                sprintf(p1->name, name);
+                show_game_state(p1, p2);
+                break;
+            }
             printf("jogada inválida!\n\n");
         }
 
@@ -274,6 +297,24 @@ void game(Player *p1, Player *p2) {
                 show_game_state(p1, p2);
                 break;
             }
+            else {
+                char name[20];
+                sprintf(name, p2->name);
+                char *play = define_computer_move(p2, p1);
+                if(strcmp(p2->name, "chico-esperto") == 0) {
+                    if(validate_move(p2, p1, play)) {
+                        printf("vez do %s: %s\n", name, play);
+                        make_move(p2, p1, play);
+                    }
+                }
+                else {
+                    printf("vez do %s: %s\n", name, play);
+                    make_move(p2, p1, play);
+                }
+                sprintf(p2->name, name);
+                show_game_state(p1, p2);
+                break;
+            }
             printf("jogada inválida!\n\n");
         }
 
@@ -302,6 +343,7 @@ MAIN() {
         Player *p = malloc(sizeof(Player));
         p->left = 1;
         p->right = 1;
+        char name[20];
         if(strcmp(argv[i], "humano") == 0) {
             sprintf(p->name, "humano %d", i);
         }
@@ -310,6 +352,9 @@ MAIN() {
         }
         else if(strcmp(argv[i], "ao-calhas") == 0) {
             sprintf(p->name, "ao-calhas %d", i);
+        }
+        else if(strcmp(argv[i], "meta-estratégia") == 0) {
+            sprintf(p->name, "meta-estratégia %d", i);
         }
         else {
             printf("ERRO!\n");
