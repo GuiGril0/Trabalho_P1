@@ -19,31 +19,7 @@ void main(int argc, char* argv[]){
     play(argv[1], argv[2]);
 
 }
-/*
-//jogada do humano
-struct maos human(char player[], int p_number, int hlh, int hrh, int alh, int arh){
-    int aux = 0;
-    char* play;
-    struct maos r;
-    char gv = ".";
-    //para voltar a pedir input em caso de um input invalido
-    while(aux == 0){
-        scanf("%s", play);
 
-        int s = get_size(play);
-        if(s==1){
-            if(play[0] == gv){
-                printf("humano perde");
-                exit(1);
-            }
-        }
-        
-        evaluate_play(play, hlh, hrh, alh, arh);
-    }
-    //r = makePlay(0, hlh, hrh, alh, arh);
-    return r;
-}
-*/
 //avalia a ordem dos jogadores e inicia o jogo
 void play(char player_one[], char player_two[]){
     struct mao *p1 = (struct mao*)malloc(sizeof(struct mao));
@@ -61,12 +37,12 @@ void play(char player_one[], char player_two[]){
     print_game(p1, p2);
 
     while(1){
-        char play[2];
+        char *move;
         if(strcmp(p1->name, "humano") == 0){
             while(1) {
                 printf("vez do %s %d: ", p1->name, p1->n);
-                scanf("%s", &play);
-                int aux = evaluate_play(p1, p2, play);
+                scanf("%s", &move);
+                int aux = evaluate_play(p1, p2, move);
                 if(aux == 0) {
                     printf("jogada inválida!\n\n");
                     continue;
@@ -79,7 +55,7 @@ void play(char player_one[], char player_two[]){
                     break;
                 }
             }
-            make_play(p1, p2, play);
+            human_play(p1, p2, play);
             print_game(p1, p2);
             if(p2->left_hand == 0 && p2->right_hand == 0) {
                 printf("vitória do %s %d!!!\n\n", p1->name, p1->n);
@@ -102,7 +78,7 @@ void play(char player_one[], char player_two[]){
                         break;
                     }
                 }
-                make_play(p2, p1, play);
+                human_play(p2, p1, play);
                 print_game(p1, p2);
                 if(p1->left_hand == 0 && p1->right_hand == 0) {
                     printf("vitória do %s %d!!!\n\n", p2->name, p2->n);
@@ -110,7 +86,9 @@ void play(char player_one[], char player_two[]){
                 }
             }
             else if(strcmp(p2->name, "chico-esperto") == 0){
-                //fazer
+                printf("vez do %s %d: ", p2->name, p2->n);
+                move = chico_play(p2, p1);
+                print_game(p1, p2);
 
                 if(p1->left_hand == 0 && p1->right_hand == 0) {
                     printf("vitória do %s %d!!!\n\n", p2->name, p2->n);
@@ -191,7 +169,7 @@ void play(char player_one[], char player_two[]){
     }
 }
 
-void make_play(struct mao *attack_player, struct mao *attacked_player, char *play){
+void human_play(struct mao *attack_player, struct mao *attacked_player, char *move){
     print_play(attack_player, attacked_player, play);
     if(strcmp(play, "ee") == 0) {
         attacked_player->left_hand = (attack_player->left_hand + attacked_player->left_hand) % 5;
@@ -217,7 +195,7 @@ void make_play(struct mao *attack_player, struct mao *attacked_player, char *pla
     }
 }
 
-void print_play(struct mao *attack_player, struct mao *attacked_player, char *play) {
+void print_play(struct mao *attack_player, struct mao *attacked_player, char *move) {
     if(strcmp(play, "ee") == 0) {
         if(attack_player->left_hand == 1 && attacked_player->left_hand == 1) {
             printf("dedo da esquerda ataca dedo da esquerda, ficam 2 dedos\n\n");
@@ -258,7 +236,7 @@ void print_game(struct mao *p1, struct mao *p2) {
     printf("%s %d: %d, %d\n\n", p2->name, p2->n, p2->left_hand, p2->right_hand);
 }
 
-int evaluate_play(struct mao *attack_player, struct mao *attacked_player, char *play){
+int evaluate_play(struct mao *attack_player, struct mao *attacked_player, char *move){
     if(strcmp(play, ".") == 0) {
         return -1;
     }
@@ -306,35 +284,33 @@ int evaluate_play(struct mao *attack_player, struct mao *attacked_player, char *
         return 0;
     }
 }
-/*
-struct maos chico_play(int clh, int crh, int alh, int arh){
-    char result[2];
-    struct maos r;
 
-    if(clh >= crh){
-        result[0] = "e";
-        if(alh <= arh){
-            result[1] = "e";
-            printf("ee");
-        } else{
-            result[1] = "d";
-            printf("ed");
+char* chico_play(struct mao *attack_player, struct mao *attacked_player){
+    char result[2];
+
+    if(attack_player->left_hand >= 1 && attack_player->left_hand >= attack_player->right_hand) {
+        result[0] = 'e';
+        if(attacked_player->left_hand >= 1 && attacked_player->left_hand <= attacked_player->right_hand) {
+            result[1] = 'e';
         }
-    } else{
-        result[0] = "d";
-        if(alh <= arh){
-            result[1] = "e";
-            printf("de");
-        } else{
+        else {
             result[1] = 'd';
-            printf("dd");
         }
     }
-    
-    r = makePlay(result, clh, crh, alh, arh);
-    return r;
+    else {
+        result[0] = 'd';
+        if(attacked_player->left_hand >= 1 && attacked_player->left_hand <= attacked_player->right_hand) {
+            result[1] = 'e';
+        }
+        else {
+            result[1] = 'd';
+        }
+    }
+    char *auxiliar = result;
+    print_play(attack_player, attacked_player, auxiliar);
+    return auxiliar;
 }
-
+/*
 struct maos ao_calhas(int aolh, int aorh, int alh, int arh){
     struct maos result1;
     struct maos result2;

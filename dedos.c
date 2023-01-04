@@ -35,20 +35,19 @@ char* define_computer_move(Player *attacker, Player *defender) {
     if(strstr(attacker->name, "chico-esperto") != NULL) {
         static char play[2];
         char c;
-        if((attacker->left > attacker->right || attacker->left == attacker->right) && attacker->left >= 1)
+        if(attacker->left >= attacker->right && attacker->left >= 1)
             c = 'e';
         else
             c = 'd';
         play[0] = c;
 
-        if((defender->left < defender->right || defender->left == defender->right) && defender->left >= 1)
+        if(defender->left <= defender->right && defender->left >= 1)
             c = 'e';
         else
             c = 'd';
         play[1] = c;
 
         char *aux = play;
-        aux = play;
         return aux;
     }
     else if(strstr(attacker->name, "ao-calhas") != NULL) {
