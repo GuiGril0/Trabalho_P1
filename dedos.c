@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include "defs.h"
+#include "lib.h"
 
 struct player {
     int right;
@@ -367,4 +368,3 @@ MAIN() {
     game(players[0], players[1]);
     return 0;
 }
-

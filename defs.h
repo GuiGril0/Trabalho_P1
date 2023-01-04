@@ -15,6 +15,3 @@
 #define ARG2 ARG(2)
 #define ARG3 ARG(3)
 #define ARG4 ARG(4)
-
-typedef struct player Player;
-typedef struct game_state Game;
