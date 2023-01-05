@@ -74,8 +74,8 @@ char* define_computer_move(Player *attacker, Player *defender) {
 }
 
 void show_game_state(Player *p1, Player *p2) {
-    printf("%s: %d, %d\n", p1->name, p1->left, p1->right);
-    printf("%s: %d, %d\n\n", p2->name, p2->left, p2->right);
+    printf("          %s:   %d, %d\n", p1->name, p1->left, p1->right);
+    printf("          %s:   %d, %d\n\n", p2->name, p2->left, p2->right);
 }
 
 int validate_move(Player *attacker, Player *defender, char *play) {
@@ -210,7 +210,7 @@ void game(Player *p1, Player *p2) {
             if(strstr(p1->name, "humano") != NULL) {
                 char *play = define_human_move(p1);
                 if(strcmp(play, ".") == 0) {
-                    printf("vitória do %s!!!\n\n", p2->name);
+                    printf("desistência: vitória do %s!!!\n\n", p2->name);
                     exit(1);
                 }
                 if(validate_move(p1, p2, play)) {
@@ -272,7 +272,7 @@ void game(Player *p1, Player *p2) {
             if(strstr(p2->name, "humano") != NULL) {
                 char *play = define_human_move(p2);
                 if(strcmp(play, ".") == 0) {
-                    printf("vitória do %s!!!\n\n", p1->name);
+                    printf("desistência: vitória do %s!!!\n\n", p1->name);
                     exit(1);
                 }
                 if(validate_move(p2, p1, play)) {
