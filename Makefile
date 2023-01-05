@@ -2,5 +2,7 @@
 
 all:	dedos
 
+compile: dedos.c
+
 clean:
 	rm -f dedos
