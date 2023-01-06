@@ -1,8 +1,9 @@
 # makefile para o dedos.c
 
-all:	dedos
+all: dedos
 
-compile: dedos.c
+dedos: dedos.c
+	gcc dedos.c -o dedos
 
 clean:
 	rm -f dedos
