@@ -288,16 +288,8 @@ void game(Player *p1, Player *p2) {
                 char name[20];
                 sprintf(name, p1->name);
                 char *play = define_computer_move(p1, p2);
-                if(strcmp(p1->name, "chico-esperto") == 0) {
-                    if(validate_move(p1, p2, play)) {
-                        printf("vez do %s: %s\n", name, play);
-                        make_move(p1, p2, play);
-                    }
-                }
-                else {
-                    printf("vez do %s: %s\n", name, play);
-                    make_move(p1, p2, play);
-                }
+                printf("vez do %s: %s\n", name, play);
+                make_move(p1, p2, play);
                 sprintf(p1->name, name);
                 show_game_state(p1, p2);
                 break;
@@ -348,16 +340,8 @@ void game(Player *p1, Player *p2) {
                 char name[20];
                 sprintf(name, p2->name);
                 char *play = define_computer_move(p2, p1);
-                if(strcmp(p2->name, "chico-esperto") == 0) {
-                    if(validate_move(p2, p1, play)) {
-                        printf("vez do %s: %s\n", name, play);
-                        make_move(p2, p1, play);
-                    }
-                }
-                else {
-                    printf("vez do %s: %s\n", name, play);
-                    make_move(p2, p1, play);
-                }
+                printf("vez do %s: %s\n", name, play);
+                make_move(p2, p1, play);
                 sprintf(p2->name, name);
                 show_game_state(p1, p2);
                 break;
