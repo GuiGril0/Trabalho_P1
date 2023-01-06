@@ -231,7 +231,9 @@ void save_move(Player *p1, Player *p2, Game *head) {
 }
 
 int check_previous_moves(Player *p1, Player *p2, Game *head) {
-    Game *aux = head;
+    if(head->next == NULL)
+        return 0;
+    Game *aux = head->next;
 
     while(aux != NULL) {
         if((aux->p1.left == p1->left && aux->p1.right == p1->right) && (aux->p2.left == p2->left && aux->p2.right == p2->right))
