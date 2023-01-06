@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <time.h>
 #include "defs.h"
 #include "lib.h"
 
@@ -62,6 +63,8 @@ char* define_computer_move(Player *attacker, Player *defender) {
                 j++;
             }
         }
+        time_t t;
+        srand((unsigned) time(&t));
         int random = rand() % j;
         return possible_plays[random];
     }
