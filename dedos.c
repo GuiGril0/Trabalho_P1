@@ -70,6 +70,8 @@ char* define_computer_move(Player *attacker, Player *defender) {
     }
     else if(strstr(attacker->name, "meta-estratégia") != NULL) {
         char all_strategies[2][20] = {"chico-esperto", "ao-calhas"};
+        time_t t;
+        srand((unsigned) time(&t));
         int random = rand() % 2;
         sprintf(attacker->name, all_strategies[random]);
         return define_computer_move(attacker, defender);
