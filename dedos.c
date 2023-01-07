@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <time.h>
+#include <unistd.h>
 #include "defs.h"
 #include "lib.h"
 
@@ -38,13 +39,17 @@ char* define_computer_move(Player *attacker, Player *defender) {
         char c;
         if(attacker->left >= attacker->right && attacker->left > 0)
             c = 'e';
-        else
+        else if(attacker->right > attacker->left && attacker->right > 0)
             c = 'd';
         play[0] = c;
 
         if(defender->left <= defender->right && defender->left > 0)
             c = 'e';
-        else
+        else if(defender->right < defender->left && defender->right > 0)
+            c = 'd';
+        else if(defender->left > 0 && defender->right == 0)
+            c = 'e';
+        else if(defender->right > 0 && defender->left == 0)
             c = 'd';
         play[1] = c;
 
@@ -131,28 +136,24 @@ int validate_move(Player *attacker, Player *defender, char *play) {
     if(strcmp(play, "ee") == 0) {
         if(attacker->left >= 1 && defender->left >= 1)
             return 1;
-        return 0;
     }
     else if(strcmp(play, "ed") == 0) {
         if(attacker->left >= 1 && defender->right >= 1)
             return 1;
-        return 0;
     }
     else if(strcmp(play, "de") == 0) {
         if(attacker->right >= 1 && defender->left >= 1)
             return 1;
-        return 0;
     }
     else if(strcmp(play, "dd") == 0) {
         if(attacker->right >= 1 && defender->right >= 1)
             return 1;
-        return 0;
     }
     else {
         if((attacker->left == 0 && (attacker->right > 0 && attacker->right % 2 == 0)) || (attacker->right == 0 && (attacker->left > 0 && attacker->left % 2 == 0)))
             return 1;
-        return 0;
     }
+    return 0;
 }
 
 void make_move(Player *attacker, Player *defender, char *play) {
@@ -250,6 +251,7 @@ int check_previous_moves(Player *p1, Player *p2, Game *head) {
 
 void game(Player *p1, Player *p2) {
     v = getenv("EMPATE");
+    
     Game *head = NULL;
     if(v != NULL) {
         head = (Game*)malloc(sizeof(Game));
@@ -308,6 +310,7 @@ void game(Player *p1, Player *p2) {
             }
             save_move(p1, p2, head);
         }
+        sleep(2);
 
         while(1) {
             if(strstr(p2->name, "humano") != NULL) {
@@ -360,6 +363,7 @@ void game(Player *p1, Player *p2) {
             }
             save_move(p1, p2, head);
         }
+        sleep(2);
     }
 }
 
