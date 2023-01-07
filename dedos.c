@@ -6,10 +6,11 @@
 #include "defs.h"
 #include "lib.h"
 
+/* estrutura responsável por representar cada jogador */
 struct player {
-    int right;
-    int left;
-    char name[20];
+    int right; //mão direita
+    int left; //mão esquerda
+    char name[20]; //nome do jogador
 };
 
 char *v;
